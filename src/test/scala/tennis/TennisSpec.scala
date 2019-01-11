@@ -23,32 +23,11 @@ class TennisTest(tennisTestCase:TennisTestCase) {
     assertEquals(tennisTestCase.expectedScore, game.calculateScore())
   }
 
-/*  @Test
-  def checkAllScoresTennisGame1() {
-    val game = new TennisGame1("player1", "player2")
-    checkAllScores(game)
-  }*/
-
   @Test
   def checkAllScoresTennisGame2() {
     val game = new TennisGameImplementation("player1", "player2")
     checkAllScores(game)
   }
-
-
- /* @Test
-  def checkAllScoresTennisGame3() {
-    val game = new TennisGame3("player1", "player2")
-    checkAllScores(game)
-  }*/
-
-  //
-  //    @Test
-  //    public void checkAllScoresTennisGame3() {
-  //        TennisGame3 game = new TennisGame3("player1", "player2");
-  //        checkAllScores(game);
-  //    }
-
 }
 
 object TennisTest {
