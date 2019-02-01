@@ -6,6 +6,7 @@ trait TennisGame {
   def calculateScore(): String
 }
 
+case class Result(P1point:Int = 0)
 
 class TennisGameImplementation(val player1Name: String, val player2Name: String) extends TennisGame {
 
@@ -18,36 +19,29 @@ class TennisGameImplementation(val player1Name: String, val player2Name: String)
   def calculateScore(): String = {
     var score = ""
 
-    if (playersAreDrawing) {
-      score = P1point match {
-        case 0 => "Love-All"
-        case 1 => "Fifteen-All"
-        case 2 => "Thirty-All"
-        case _ => "Deuce"
-
-      }
-    }
-
-    def processScoreIfOnePlayerIsZero(point: Int): String ={
-      point match {
-        case 1 => "Fifteen"
-        case 2 => "Thirty"
-        case 3 => "Forty"
-        case _ => ""
-      }
-    }
 
 
-    if (onlyPlayerTwoIsZero) {
-      P1res = processScoreIfOnePlayerIsZero(P1point)
-      P2res = "Love"
-      score = P1res + "-" + P2res
-    }
+    (P1point, P2point) match {
+      case (p1, p2) if p1 == p2 =>
+        score = P1point match {
+          case 0 => "Love-All"
+          case 1 => "Fifteen-All"
+          case 2 => "Thirty-All"
+          case _ => "Deuce"
 
-    if (onlyPlayerOneIsZero) {
-      P2res = processScoreIfOnePlayerIsZero(P2point)
-      P1res = "Love"
-      score = P1res + "-" + P2res
+        }
+
+      case (p1, 0) if p1 > 0 =>
+        P1res = processScoreIfOnePlayerIsZero(P1point)
+        P2res = "Love"
+        score = P1res + "-" + P2res
+
+      case (0, p2) if p2 > 0 =>
+        P2res = processScoreIfOnePlayerIsZero(P2point)
+        P1res = "Love"
+        score = P1res + "-" + P2res
+
+      case _ => ()
     }
 
     if (playerOneIsLeading) {
@@ -64,9 +58,17 @@ class TennisGameImplementation(val player1Name: String, val player2Name: String)
     }
 
     score = outcome(P1point, P2point, "player1").getOrElse(score)
-    score = outcome(P2point, P1point, "player2").getOrElse(score)
+    outcome(P2point, P1point, "player2").getOrElse(score)
 
-    return score
+  }
+
+  def processScoreIfOnePlayerIsZero(point: Int): String ={
+    point match {
+      case 1 => "Fifteen"
+      case 2 => "Thirty"
+      case 3 => "Forty"
+      case _ => ""
+    }
   }
 
   private def playerTwoIsLeading = {
@@ -77,17 +79,6 @@ class TennisGameImplementation(val player1Name: String, val player2Name: String)
     P1point > P2point && P1point < 4
   }
 
-  private def onlyPlayerOneIsZero = {
-    P2point > 0 && P1point == 0
-  }
-
-  private def onlyPlayerTwoIsZero = {
-    P1point > 0 && P2point == 0
-  }
-
-  private def playersAreDrawing = {
-    P1point == P2point
-  }
 
 
 
